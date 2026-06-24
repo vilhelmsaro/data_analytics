@@ -19,6 +19,15 @@ pip install -r requirements.txt
 
 ## Run
 
+With optional server settings from `.env` (copy the example first if you want to customize port or other Streamlit server options):
+
+```bash
+cp .env.example .env   # optional; Streamlit defaults work if you skip this
+set -a && source .env && set +a && streamlit run app.py
+```
+
+Or without `.env`:
+
 ```bash
 streamlit run app.py
 ```
@@ -71,6 +80,7 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
 ```
 .
 ├── app.py
+├── .env.example
 ├── requirements.txt
 ├── README.md
 ├── PHASE2_PLAN.md
