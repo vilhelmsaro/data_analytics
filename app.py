@@ -143,7 +143,7 @@ def generate_insights(df: pd.DataFrame) -> List[str]:
     if "Transaction_Type" in df.columns:
         counts = df["Transaction_Type"].value_counts(normalize=True) * 100
         parts = [f"{label}: {value:.1f}%" for label, value in counts.items()]
-        insights.append(f"Buy vs Sell split — {', '.join(parts)}.")
+        insights.append(f"Buy vs Sell split: {', '.join(parts)}.")
 
     if DATE_COLUMN in df.columns and "PnL" in df.columns:
         monthly = df.groupby(df[DATE_COLUMN].dt.to_period("M"))["PnL"].sum()
@@ -263,6 +263,7 @@ def main() -> None:
 
     with st.sidebar:
         st.header("Filters")
+        st.caption("Apply to all tabs. Clearing every option in a list includes all values.")
 
         region_options = sorted(df["Region"].dropna().unique()) if "Region" in df.columns else []
         asset_options = sorted(df["Asset"].dropna().unique()) if "Asset" in df.columns else []
@@ -291,11 +292,14 @@ def main() -> None:
             selected_date_range = ()
 
         st.header("Analysis")
+        st.caption("Metric and group-by drive the Analytics tab (charts, top/bottom, summaries).")
+
         available_metrics = [col for col in NUMERIC_METRICS if col in df.columns]
         selected_metric = st.selectbox(
             "Metric for analysis",
             available_metrics,
             index=available_metrics.index("PnL") if "PnL" in available_metrics else 0,
+            help="Used for top/bottom rows, group-by charts, and the time series in Analytics.",
         )
 
         available_categories = [col for col in CATEGORY_COLUMNS if col in df.columns]
@@ -303,8 +307,14 @@ def main() -> None:
             "Group by",
             available_categories,
             index=available_categories.index("Region") if "Region" in available_categories else 0,
+            help="Category for the group-by table and bar chart in Analytics.",
         )
 
+        st.subheader("Overview table sort")
+        st.caption(
+            "Row order in the Overview tab only. Independent of the metric above; "
+            "pick the column you want to sort by."
+        )
         sort_column = st.selectbox("Sort table by", list(df.columns))
         sort_ascending = st.radio("Sort direction", ["Ascending", "Descending"]) == "Ascending"
 
@@ -329,6 +339,12 @@ def main() -> None:
     )
 
     with tab_overview:
+        sort_label = "ascending" if sort_ascending else "descending"
+        st.caption(
+            f"Table sorted by **{sort_column}** ({sort_label}). "
+            "Other columns may look out of order. Change \"Sort table by\" in the sidebar."
+        )
+
         st.subheader("Dataset summary")
         summary_cols = st.columns(3)
         summary_cols[0].metric("Rows", len(filtered_df))
@@ -357,6 +373,11 @@ def main() -> None:
         if filtered_df.empty:
             st.warning("No rows match the current filters.")
         else:
+            st.caption(
+                f"Using **{selected_metric}** grouped by **{selected_category}** "
+                "(sidebar Analysis controls). Table sort does not affect this tab."
+            )
+
             st.subheader("Summary statistics")
 
             numeric_stats = build_numeric_summary(filtered_df)
@@ -400,6 +421,7 @@ def main() -> None:
                 )
 
             st.subheader(f"{selected_metric} by {selected_category}")
+            st.caption("Bar chart shows total; table also includes average and row count.")
             grouped = (
                 filtered_df.groupby(selected_category)[selected_metric]
                 .agg(total="sum", average="mean", count="count")
@@ -410,6 +432,7 @@ def main() -> None:
 
             if DATE_COLUMN in filtered_df.columns:
                 st.subheader(f"{selected_metric} over time")
+                st.caption("Sums the selected metric per day or per calendar month.")
                 time_granularity = st.radio(
                     "Time granularity",
                     ["Daily", "Monthly"],
@@ -439,6 +462,10 @@ def main() -> None:
 
     with tab_insights:
         st.subheader("Key insights")
+        st.caption(
+            "Rule-based highlights from the current filtered data. "
+            "Not affected by Overview table sort."
+        )
         for insight in insights:
             st.markdown(f"- {insight}")
         if (
@@ -453,6 +480,10 @@ def main() -> None:
 
     with tab_export:
         st.subheader("Download filtered data")
+        st.caption(
+            "CSV and Excel contain filtered rows in dataset order. "
+            "The Markdown report adds filter summary, aggregates, and insights."
+        )
         if filtered_df.empty:
             st.warning("No rows match the current filters.")
         else:

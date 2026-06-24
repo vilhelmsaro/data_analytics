@@ -5,9 +5,9 @@ Internal tool for analyzing brokerage transaction data. Built as a 3-hour take-h
 ## Stack
 
 - **Python 3.9+**
-- **Streamlit** — web UI
-- **Pandas** — data loading, filtering, and analytics
-- **OpenPyXL** — Excel read/write
+- **Streamlit**: web UI
+- **Pandas**: data loading, filtering, and analytics
+- **OpenPyXL**: Excel read/write
 
 ## Setup
 
@@ -40,10 +40,10 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
 2. Apply filters: Region, Asset, transaction type, and date range.
    - Clearing all options in a multiselect includes every value (same as selecting all).
 3. Explore tabs:
-   - **Overview** — schema, missing values, sorted data preview (expandable full table)
-   - **Analytics** — numeric and categorical summary stats, top/bottom rows, group-by chart, daily or monthly time series
-   - **Insights** — auto-generated bullet points
-   - **Export** — download filtered CSV, Excel, or Markdown report
+   - **Overview**: schema, missing values, sorted data preview (expandable full table)
+   - **Analytics**: numeric and categorical summary stats, top/bottom rows, group-by chart, daily or monthly time series
+   - **Insights**: auto-generated bullet points
+   - **Export**: download filtered CSV, Excel, or Markdown report
 4. Use sidebar controls to choose a metric, grouping category, and table sort order.
 
 ## Implemented (assignment checklist)
@@ -83,6 +83,5 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
 ├── .env.example
 ├── requirements.txt
 ├── README.md
-├── PHASE2_PLAN.md
 └── .gitignore
 ```
