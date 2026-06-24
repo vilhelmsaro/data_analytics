@@ -8,6 +8,8 @@ Internal tool for analyzing tabular data from CSV or Excel files. Upload a file,
 - **Streamlit**: web UI
 - **Pandas**: data loading, filtering, and analytics
 - **OpenPyXL**: Excel read/write
+- **FPDF2**: PDF report generation
+- **Matplotlib**: chart images embedded in PDF reports
 
 ## Setup
 
@@ -43,7 +45,7 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
    - **Overview**: schema, missing values, sorted data preview (expandable full table)
    - **Analytics**: numeric and categorical summary stats, top/bottom rows, group-by chart, daily or monthly time series (when a date column exists)
    - **Insights**: auto-generated bullet points from the uploaded columns
-   - **Export**: download filtered CSV, Excel, or Markdown report
+   - **Export**: download filtered CSV, Excel, Markdown report, or PDF report (with data preview, charts, and page numbers)
 4. Use sidebar controls to choose a numeric metric, grouping category, and table sort order.
 
 ## Implemented (assignment checklist)
@@ -57,7 +59,7 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
 - [x] Filtering and sorting
 - [x] Metric and category selection for analysis
 - [x] Auto-generated insights
-- [x] Export: filtered CSV, Excel, and Markdown report
+- [x] Export: filtered CSV, Excel, Markdown report, and PDF report (preview table, charts, page numbers)
 
 ## Limitations
 
@@ -65,15 +67,16 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
 - Data is not persisted to a database
 - Streamlit reruns the full script on each interaction (fine for datasets around a few hundred rows), for practical production ready usage, I would go with a custom React or would try to find another ready-to-go UI tools
 - Column types are inferred automatically; unusual formats may need cleanup in the source file
-- Report export is Markdown, not PDF for the sake of assignment's finishing time constraints
 
 ## Future improvements
 
-- PDF report export
-- Unit tests for filter and insight logic
+With more time, I would also add:
+
+- Unit tests for filter, insight, and report generation logic
 - Split `app.py` into modules as the app grows
-- Deploy to Streamlit Cloud, or other place if the stack is changes or any other viable reasons
+- Deploy to Streamlit Cloud or another hosting option if the stack changes
 - Optimizations for much larger files (chunked reads, smarter caching)
+- Richer PDF styling (branding, summary-statistics tables, daily time-series chart option)
 
 ## Project structure
 
