@@ -48,7 +48,7 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
    - **Export**: download filtered CSV, Excel, Markdown report, or PDF report (with data preview, charts, and page numbers)
 4. Use sidebar controls to choose a numeric metric, grouping category, and table sort order.
 
-## Implemented (assignment checklist)
+## Features
 
 - [x] File upload (CSV, Excel)
 - [x] Data preview (first rows, columns, row/column counts, dtypes, missing values)
@@ -65,12 +65,12 @@ Open the URL shown in the terminal (usually `http://localhost:8501`).
 
 - Single-user session tool; no authentication
 - Data is not persisted to a database
-- Streamlit reruns the full script on each interaction (fine for datasets around a few hundred rows), for practical production ready usage, I would go with a custom React or would try to find another ready-to-go UI tools
+- Streamlit reruns the full script on each interaction (fine for datasets around a few hundred rows); a production deployment would likely need a different UI stack or performance tuning for larger files
 - Column types are inferred automatically; unusual formats may need cleanup in the source file
 
 ## Future improvements
 
-With more time, I would also add:
+Possible extensions:
 
 - Unit tests for filter, insight, and report generation logic
 - Split `app.py` into modules as the app grows

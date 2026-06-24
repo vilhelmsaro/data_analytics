@@ -84,7 +84,7 @@ def categorical_columns(df: pd.DataFrame) -> List[str]:
         for col in df.columns
         if pd.api.types.is_object_dtype(df[col])
         or pd.api.types.is_string_dtype(df[col])
-        or pd.api.types.is_categorical_dtype(df[col])
+        or isinstance(df[col].dtype, pd.CategoricalDtype)
         or pd.api.types.is_bool_dtype(df[col])
     ]
 
@@ -614,21 +614,12 @@ def main() -> None:
             df = load_data(uploaded_file.getvalue(), uploaded_file.name)
         except ValueError as exc:
             st.error("Unsupported file type.")
-            st.markdown(str(exc))
-            st.markdown(
-                "**What you can do:** upload a `.csv`, `.xlsx`, or `.xls` file."
-            )
+            st.caption(str(exc))
         except Exception:
             st.error("Could not read the uploaded file.")
-            st.markdown(
+            st.caption(
                 "The file may be corrupted, password-protected, or not a valid "
-                "spreadsheet."
-            )
-            st.markdown(
-                "**What you can do:**\n"
-                "- Open the file in Excel or a text editor and confirm it is a "
-                "readable table.\n"
-                "- Re-export it as CSV or Excel and try again."
+                "spreadsheet. Re-export it as CSV or Excel and try again."
             )
 
     if df is None:
@@ -792,7 +783,7 @@ def main() -> None:
             if selected_metric is None:
                 st.info(
                     "Top/bottom rows, grouping, and time series need a numeric "
-                    "column. This file has none — summary statistics above are "
+                    "column. This file has none. Summary statistics above are "
                     "still available when applicable."
                 )
             elif selected_category is None:
@@ -888,7 +879,7 @@ def main() -> None:
                     )
                     st.line_chart(time_series, x="Month", y=selected_metric)
             elif selected_metric and not date_cols:
-                st.caption("No date column detected — time series is not available.")
+                st.caption("No date column detected. Time series is not available.")
 
     with tab_insights:
         st.subheader("Key insights")
@@ -900,8 +891,7 @@ def main() -> None:
                 st.markdown(f"- {insight}")
             if not numeric_cols:
                 st.caption(
-                    "Limited insights: add numeric columns for richer change and "
-                    "variability analysis."
+                    "Numeric columns unlock change and variability insights."
                 )
 
     with tab_export:
